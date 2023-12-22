@@ -160,9 +160,42 @@ void GraphDestroy(Graph **p) {
 Graph *GraphCopy(const Graph *g) {
     assert(g != NULL);
 
-    // TO BE COMPLETED !!
+    // Create an empty graph, abort if there is an error
+    Graph *copy = GraphCreate(g->numVertices, g->isDigraph, g->isWeighted);
+    if (copy == NULL)
+        abort();
 
-    return NULL;
+    // Copy vertices
+    ListMoveToHead(g->verticesList);
+    for (unsigned int i = 0; i < g->numVertices; ListMoveToNext(g->verticesList), i++) {
+        struct _Vertex *v = ListGetCurrentItem(g->verticesList);
+
+        // Manually create a copy of the vertex
+        struct _Vertex *v_copy = malloc(sizeof(struct _Vertex));
+        if (v_copy == NULL)
+            abort();
+        v_copy->id = v->id;
+        v_copy->edgesList = ListCreate(graphEdgesComparator);
+
+        ListInsert(copy->verticesList, v_copy);
+
+        // Copy edges
+        ListMoveToHead(v->edgesList);
+        for (unsigned int j = 0; j < ListGetSize(v->edgesList); ListMoveToNext(v->edgesList), j++) {
+            struct _Edge *e = ListGetCurrentItem(v->edgesList);
+
+            // Manually create a copy of the edge
+            struct _Edge *e_copy = malloc(sizeof(struct _Edge));
+            if (e_copy == NULL)
+                abort();
+            e_copy->adjVertex = e->adjVertex;
+            e_copy->weight = e->weight;
+
+            ListInsert(v_copy->edgesList, e_copy);
+        }
+    }
+
+    return copy;
 }
 
 Graph *GraphFromFile(FILE *f) {
