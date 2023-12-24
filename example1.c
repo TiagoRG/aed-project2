@@ -16,6 +16,9 @@ int main(void) {
     GraphAddEdge(g01, 3, 4);
     printf("The first graph:\n");
     GraphDisplay(g01);
+    Graph *g01_copy = GraphCopy(g01);
+    printf("Copy of the first graph:\n");
+    GraphDisplay(g01_copy);
     for (int i = 0; i < 6; i++) {
         GraphListAdjacents(g01, i);
     }
@@ -31,6 +34,9 @@ int main(void) {
     GraphAddEdge(dig01, 3, 4);
     printf("The second graph:\n");
     GraphDisplay(dig01);
+    Graph *dig01_copy = GraphCopy(dig01);
+    printf("Copy of the second graph:\n");
+    GraphDisplay(dig01_copy);
     printf("Remove edge (1,2)\n");
     GraphDisplay(dig01);
 
@@ -40,6 +46,9 @@ int main(void) {
     GraphAddWeightedEdge(g03, 3, 4, 10);
     printf("The third graph:\n");
     GraphDisplay(g03);
+    Graph *g03_copy = GraphCopy(g03);
+    printf("Copy of the second graph:\n");
+    GraphDisplay(g03_copy);
     printf("Remove edge (1,2)\n");
     GraphDisplay(g03);
 

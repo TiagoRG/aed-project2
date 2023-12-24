@@ -160,38 +160,38 @@ void GraphDestroy(Graph **p) {
 Graph *GraphCopy(const Graph *g) {
     assert(g != NULL);
 
-    // Create an empty graph, abort if there is an error
+    // Create an empty graph
     Graph *copy = GraphCreate(g->numVertices, g->isDigraph, g->isWeighted);
-    if (copy == NULL)
-        abort();
 
     // Copy vertices
+    // Move to the beggining of the list
     ListMoveToHead(g->verticesList);
+    // Foreach vertex in the vertices list
     for (unsigned int i = 0; i < g->numVertices; ListMoveToNext(g->verticesList), i++) {
-        struct _Vertex *v = ListGetCurrentItem(g->verticesList);
+        // Get pointer to current vertex
+        const struct _Vertex *v = ListGetCurrentItem(g->verticesList);
+        // Get pointer to current vertex copy
+        ListMove(copy->verticesList, v->id);
+        struct _Vertex *v_copy = ListGetCurrentItem(copy->verticesList);
 
-        // Manually create a copy of the vertex
-        struct _Vertex *v_copy = malloc(sizeof(struct _Vertex));
-        if (v_copy == NULL)
-            abort();
+        // Copy the vertex parameters
         v_copy->id = v->id;
-        v_copy->edgesList = ListCreate(graphEdgesComparator);
-
-        ListInsert(copy->verticesList, v_copy);
+        v_copy->inDegree = v->inDegree;
+        v_copy->outDegree = v->outDegree;
 
         // Copy edges
+        // Move to the beggining of the list
         ListMoveToHead(v->edgesList);
+        // Foreach edges in the edges list
         for (unsigned int j = 0; j < ListGetSize(v->edgesList); ListMoveToNext(v->edgesList), j++) {
-            struct _Edge *e = ListGetCurrentItem(v->edgesList);
+            // Get pointer to current edge
+            const struct _Edge *e = ListGetCurrentItem(v->edgesList);
 
-            // Manually create a copy of the edge
-            struct _Edge *e_copy = malloc(sizeof(struct _Edge));
-            if (e_copy == NULL)
-                abort();
-            e_copy->adjVertex = e->adjVertex;
-            e_copy->weight = e->weight;
-
-            ListInsert(v_copy->edgesList, e_copy);
+            // Add edge
+            if (copy->isWeighted)
+                GraphAddWeightedEdge(copy, v_copy->id, e->adjVertex, e->weight);
+            else
+                GraphAddEdge(copy, v_copy->id, e->adjVertex);
         }
     }
 
