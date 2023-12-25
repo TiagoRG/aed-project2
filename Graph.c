@@ -201,9 +201,42 @@ Graph *GraphCopy(const Graph *g) {
 Graph *GraphFromFile(FILE *f) {
     assert(f != NULL);
 
-    // TO BE COMPLETED !!
+    // Read graph type
+    int isDigraph, isWeighted, numVertices, numEdges;
+    fscanf(f, "%d", &isDigraph);
+    fscanf(f, "%d", &isWeighted);
+    fscanf(f, "%d", &numVertices);
+    fscanf(f, "%d", &numEdges);
 
-    return NULL;
+    // Create an empty graph with the read parameters
+    Graph *g = GraphCreate(numVertices, isDigraph, isWeighted);
+
+    // Read edges
+    for (int i = 0; i < numEdges; i++) {
+        // Variables for source vertex, destination vertex
+        int v, w;
+        // Read source and destination vertex
+        fscanf(f, "%d %d", &v, &w);
+        // Ignore laces
+        if (v == w)
+            continue;
+
+        if (!isWeighted) {
+            // If the graph is not weighted, add an unweighted edge
+            GraphAddEdge(g, v, w);
+        } else {
+            // Variable for edge weight
+            double weight;
+            // Read edge weight
+            fscanf(f, "%lf", &weight);
+            // Add weighted edge
+            GraphAddWeightedEdge(g, v, w, weight);
+        }
+        // Read end of line
+        // fscanf(f, "\n");
+    }
+
+    return g;
 }
 
 // Graph

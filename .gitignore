@@ -3,6 +3,7 @@ GRAPHS/
 example1
 example2
 example3
+graph_from_file_test
 
 # Prerequisites
 *.d
