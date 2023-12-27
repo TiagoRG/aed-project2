@@ -176,8 +176,6 @@ Graph *GraphCopy(const Graph *g) {
 
         // Copy the vertex parameters
         v_copy->id = v->id;
-        v_copy->inDegree = v->inDegree;
-        v_copy->outDegree = v->outDegree;
 
         // Copy edges
         // Move to the beggining of the list
