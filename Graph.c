@@ -459,8 +459,54 @@ int GraphAddWeightedEdge(Graph *g, unsigned int v, unsigned int w, double weight
 int GraphRemoveEdge(Graph *g, unsigned int v, unsigned int w) {
     assert(g != NULL);
 
-    // TO BE COMPLETED !!
+    // Get pointer to origin vertex
+    ListMove(g->verticesList, v);
+    struct _Vertex *origin = ListGetCurrentItem(g->verticesList);
+    // Get pointer to destination vertex
+    ListMove(g->verticesList, w);
+    struct _Vertex *dest = ListGetCurrentItem(g->verticesList);
 
+    // Move to beggining of edgesList for the origin
+    ListMoveToHead(origin->edgesList);
+    for (unsigned int i = 0; i < ListGetSize(origin->edgesList); i++) {
+        // Check if origin adjVertex is the destination
+        if (((struct _Edge*)ListGetCurrentItem(origin->edgesList))->adjVertex == w) {
+            // Remove the edge
+            ListRemoveCurrent(origin->edgesList);
+            // Decrease vertices degrees
+            origin->outDegree--;
+            dest->inDegree--;
+            // Run addicional code if the graph is not a digraph or return success if it is
+            if (g->isDigraph) return 1;
+            else goto notdigraph;
+        } else {
+            ListMoveToNext(origin->edgesList);
+        }
+    }
+
+    // Return unsuccess
+    return 0;
+
+// This code will only be ran if the graph is not a digraph
+notdigraph:
+    // Move to beggining of edgesList for the destination
+    ListMoveToHead(dest->edgesList);
+    for (unsigned int i = 0; i < ListGetSize(dest->edgesList); i++) {
+        // Check if destination adjVertex is the origin
+        if (((struct _Edge*)ListGetCurrentItem(dest->edgesList))->adjVertex == v) {
+            // Remove the edge
+            ListRemoveCurrent(dest->edgesList);
+            // Decrease vertices degrees
+            origin->inDegree--;
+            dest->outDegree--;
+            // Return success
+            return 1;
+        } else {
+            ListMoveToNext(dest->edgesList);
+        }
+    }
+
+    // Return unsuccess
     return 0;
 }
 
