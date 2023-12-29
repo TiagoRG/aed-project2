@@ -156,9 +156,21 @@ int GraphTopoSortIsValid(const GraphTopoSort *p) { return p->validResult; }
 //
 unsigned int *GraphTopoSortGetSequence(const GraphTopoSort *p) {
     assert(p != NULL);
-    // TO BE COMPLETED
-    // ...
-    return NULL;
+
+    // If no valid sorting was computed, return NULL
+    if (p->validResult == 0)
+        return NULL;
+
+    // Allocate memory for the result array and abort if allocation fails
+    unsigned int *result = (unsigned int *)malloc(p->numVertices * sizeof(int));
+    if (result == NULL)
+        abort();
+
+    // Copy the sequence
+    for (unsigned int i = 0; i < p->numVertices; i++)
+        result[i] = p->vertexSequence[i];
+
+    return result;
 }
 
 // DISPLAYING on the console
