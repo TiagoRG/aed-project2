@@ -230,8 +230,6 @@ Graph *GraphFromFile(FILE *f) {
             // Add weighted edge
             GraphAddWeightedEdge(g, v, w, weight);
         }
-        // Read end of line
-        // fscanf(f, "\n");
     }
 
     return g;
