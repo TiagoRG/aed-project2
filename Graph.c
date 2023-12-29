@@ -508,10 +508,36 @@ notdigraph:
 
 // CHECKING
 
-int GraphCheckInvariants(const Graph *g) {
+int GraphCheckInvariants(const Graph *g){
     assert(g != NULL);
-    // TO BE COMPLETED !!
 
+    if (g->isDigraph == 0) {
+        // undirected graph invariants
+        if (g->isComplete == 1) {
+            // complete undirected graph invariants
+            if (g->numEdges != g->numVertices * (g->numVertices - 1) / 2) {
+                return 0;
+            }
+        } else {
+            // non-complete undirected graph invariants
+            if (g->numEdges > g->numVertices * (g->numVertices - 1) / 2) {
+                return 0;
+            }
+        }
+    } else {
+        // directed graph invariants
+        if (g->isComplete == 1) {
+            // complete directed graph invariants
+            if (g->numEdges != g->numVertices * (g->numVertices - 1)) {
+                return 0;
+            }
+        } else {
+            // non-complete directed graph invariants
+            if (g->numEdges > g->numVertices * (g->numVertices - 1)) {
+                return 0;
+            }
+        }
+    }
     return 0;
 }
 
