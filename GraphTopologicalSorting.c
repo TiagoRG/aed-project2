@@ -31,10 +31,36 @@ struct _GraphTopoSort {
 static GraphTopoSort *_create(Graph *g) {
     assert(g != NULL);
 
-    GraphTopoSort *p = NULL;
+    // Allocate memory for the struct
+    GraphTopoSort *p = (GraphTopoSort *)malloc(sizeof(GraphTopoSort));
+    if (p == NULL)
+        abort();
 
-    // TO BE COMPLETED
-    // ...
+    int numVertices = GraphGetNumVertices(g);
+
+    // Allocate memory for the marked array initialized to 0 and abort if allocation fails
+    p->marked = (int *)calloc(numVertices, sizeof(int));
+    if (p->marked == NULL)
+        abort();
+
+    // Allocate memory for the numIncomingEdges array and abort if allocation fails
+    p->numIncomingEdges = (unsigned int *)malloc(numVertices * sizeof(int));
+    if (p->numIncomingEdges == NULL)
+        abort();
+
+    // Initialize the numIncomingEdges array with the in-degree of each vertex
+    for (unsigned int v = 0; v < numVertices; v++)
+        p->numIncomingEdges[v] = GraphGetVertexInDegree(g, v);
+
+    // Allocate memory for the vertexSequence array and abort if allocation fails
+    p->vertexSequence = (unsigned int *)malloc(numVertices * sizeof(int));
+    if (p->vertexSequence == NULL)
+        abort();
+
+    // Initialize the other struct fields
+    p->validResult = 0;
+    p->numVertices = numVertices;
+    p->graph = GraphCopy(g);
 
     return p;
 }
