@@ -508,15 +508,34 @@ notdigraph:
 
 // CHECKING
 
-int GraphCheckInvariants(const Graph *g){
-    assert(g != NULL);
+int ArrayCheckDuplicates(const unsigned int *array) {
+	for (unsigned int o1 = 1; o1 <= 0[array]; o1++) {
+		for (unsigned int o2 = o1 + 1; o2 <= 0[array]; o2++) {
+			if (o1[array] == o2[array]) {
+			return 1;
+			}
+		}
+	} return 0;
+}
 
-    // check for complete and non-complete directed and undirected graphs invariants
-    if ((g->isDigraph && g->numEdges <= g->numVertices * (g->numVertices - 1) / 2) || (!g->isDigraph && g->numEdges <= g->numVertices * (g->numVertices -1 ))) {
-        return 1;
-    }
+int ArrayContains(const unsigned int *array, unsigned int value) {
+	for (unsigned int o = 1; o <= 0[array]; o++) {
+		if (o[array] == value) {
+			return 1;
+		}
+	} return 0;
+}
 
-    return 0;
+int GraphCheckInvariants(const Graph *g) {
+	assert(g != NULL);
+	
+	for (unsigned int v = 0; v < g->numVertices; v++) {
+		ListMove(g->verticesList, v);
+		unsigned int *adjacents = GraphGetAdjacentsTo(g, v);
+		if (ArrayCheckDuplicates(adjacents) || ArrayContains(adjacents, v)) {
+			return 1; // if there are parallel edges or laces
+		}
+	} return 0;
 }
 
 // DISPLAYING on the console
