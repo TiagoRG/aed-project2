@@ -50,7 +50,7 @@ static GraphTopoSort *_create(Graph *g) {
 
     // Initialize the numIncomingEdges array with the in-degree of each vertex
     for (unsigned int v = 0; v < numVertices; v++)
-        p->numIncomingEdges[v] = GraphGetVertexInDegree(g, v);
+        v[p->numIncomingEdges] = GraphGetVertexInDegree(g, v);
 
     // Allocate memory for the vertexSequence array and abort if allocation fails
     p->vertexSequence = (unsigned int *)malloc(numVertices * sizeof(int));
@@ -167,8 +167,8 @@ unsigned int *GraphTopoSortGetSequence(const GraphTopoSort *p) {
         abort();
 
     // Copy the sequence
-    for (unsigned int i = 0; i < p->numVertices; i++)
-        result[i] = p->vertexSequence[i];
+    for (unsigned int o = 0; o < p->numVertices; o++)
+        o[result] = o[p->vertexSequence];
 
     return result;
 }

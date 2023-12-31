@@ -174,22 +174,20 @@ Graph *GraphCopy(const Graph *g) {
         ListMove(copy->verticesList, v->id);
         struct _Vertex *v_copy = ListGetCurrentItem(copy->verticesList);
 
-        // Copy the vertex parameters
+        // Copy the vertex id
         v_copy->id = v->id;
 
         // Copy edges
         // Move to the beggining of the list
         ListMoveToHead(v->edgesList);
         // Foreach edges in the edges list
-        for (unsigned int j = 0; j < ListGetSize(v->edgesList); ListMoveToNext(v->edgesList), j++) {
+        for (unsigned int j = 0; j < v->outDegree; ListMoveToNext(v->edgesList), j++) {
             // Get pointer to current edge
             const struct _Edge *e = ListGetCurrentItem(v->edgesList);
 
             // Add edge
-            if (copy->isWeighted)
-                GraphAddWeightedEdge(copy, v_copy->id, e->adjVertex, e->weight);
-            else
-                GraphAddEdge(copy, v_copy->id, e->adjVertex);
+            if (copy->isWeighted) GraphAddWeightedEdge(copy, v_copy->id, e->adjVertex, e->weight);
+            else GraphAddEdge(copy, v_copy->id, e->adjVertex);
         }
     }
 
@@ -200,7 +198,7 @@ Graph *GraphFromFile(FILE *f) {
     assert(f != NULL);
 
     // Read graph type
-    int isDigraph, isWeighted, numVertices, numEdges;
+    unsigned int isDigraph, isWeighted, numVertices, numEdges;
     fscanf(f, "%d", &isDigraph);
     fscanf(f, "%d", &isWeighted);
     fscanf(f, "%d", &numVertices);
@@ -209,15 +207,13 @@ Graph *GraphFromFile(FILE *f) {
     // Create an empty graph with the read parameters
     Graph *g = GraphCreate(numVertices, isDigraph, isWeighted);
 
-    // Read edges
-    for (int i = 0; i < numEdges; i++) {
-        // Variables for source vertex, destination vertex
-        int v, w;
-        // Read source and destination vertex
-        fscanf(f, "%d %d", &v, &w);
-        // Ignore laces
-        if (v == w)
-            continue;
+    // Variable for edge vertices (source and destination)
+    int v, w;
+    // Read edges until the end of the file and store into variables
+    while (fscanf(f, "%d %d", &v, &w) != EOF) {
+        // Uncomment if laces are to be ignored
+        // if (v == w)
+        //     continue;
 
         if (!isWeighted) {
             // If the graph is not weighted, add an unweighted edge
