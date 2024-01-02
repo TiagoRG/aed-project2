@@ -142,14 +142,29 @@ GraphTopoSort *GraphTopoSortComputeV3(Graph *g) {
     assert(g != NULL && GraphIsDigraph(g) == 1);
 
     // Create and initialize the struct
-
     GraphTopoSort *topoSort = _create(g);
+    unsigned int *seq_next = topoSort->vertexSequence; // Pointer to the next position in the resulting sequence
 
-    // Build the topological sorting
+    // Create a queue with the vertices with no incoming edges
+    Queue *queue = QueueCreate(topoSort->numVertices);
+    for (unsigned int v = 0; v < topoSort->numVertices; v++)
+        if (*(topoSort->numIncomingEdges + v) == 0) QueueEnqueue(queue, v);
 
-    // TO BE COMPLETED
-    //...
+    while (!QueueIsEmpty(queue) && topoSort->numVertices-- > 0) {
+        // Remove the first vertex from the queue
+        unsigned int v = QueueDequeue(queue);
 
+        // Add the vertex to the sequence
+        *seq_next++ = v;
+
+        // Update the in-degree of the adjacent vertices and enqueue the ones with no incoming edges
+        const unsigned int *adj = GraphGetAdjacentsTo(topoSort->graph, v);
+        for (unsigned int o = 1; o <= 0[adj]; o++) if (--(*(topoSort->numIncomingEdges + o[adj])) == 0)
+            QueueEnqueue(queue, o[adj]);
+    }
+
+    // A valid sorting was computed if all vertices were processed
+    topoSort->validResult = topoSort->numVertices == 0;
     return topoSort;
 }
 
