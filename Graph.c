@@ -211,9 +211,9 @@ Graph *GraphFromFile(FILE *f) {
     int v, w;
     // Read edges until the end of the file and store into variables
     while (fscanf(f, "%d %d", &v, &w) != EOF) {
-        // Uncomment if laces are to be ignored
-        // if (v == w)
-        //     continue;
+        // Ignore laces
+        if (v == w)
+            continue;
 
         if (!isWeighted) {
             // If the graph is not weighted, add an unweighted edge
@@ -505,21 +505,23 @@ notdigraph:
 // CHECKING
 
 int ArrayCheckDuplicates(const unsigned int *array) {
-	for (unsigned int o1 = 1; o1 <= 0[array]; o1++) {
-		for (unsigned int o2 = o1 + 1; o2 <= 0[array]; o2++) {
-			if (o1[array] == o2[array]) {
-			return 1;
-			}
-		}
-	} return 0;
+    assert(array != NULL);
+
+	for (unsigned int o = 1; o < 0[array]; o++)
+        if (o[array] == (o+1)[array])
+            return 1;
+
+	return 0;
 }
 
 int ArrayContains(const unsigned int *array, unsigned int value) {
-	for (unsigned int o = 1; o <= 0[array]; o++) {
-		if (o[array] == value) {
+    assert(array != NULL);
+
+	for (unsigned int o = 1; o <= 0[array]; o++)
+		if (o[array] == value)
 			return 1;
-		}
-	} return 0;
+
+    return 0;
 }
 
 int GraphCheckInvariants(const Graph *g) {
@@ -528,10 +530,11 @@ int GraphCheckInvariants(const Graph *g) {
 	for (unsigned int v = 0; v < g->numVertices; v++) {
 		ListMove(g->verticesList, v);
 		unsigned int *adjacents = GraphGetAdjacentsTo(g, v);
-		if (ArrayCheckDuplicates(adjacents) || ArrayContains(adjacents, v)) {
+		if (ArrayCheckDuplicates(adjacents) || ArrayContains(adjacents, v))
 			return 1; // if there are parallel edges or laces
-		}
-	} return 0;
+    }
+
+    return 0;
 }
 
 // DISPLAYING on the console
