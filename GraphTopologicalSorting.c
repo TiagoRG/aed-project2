@@ -77,11 +77,11 @@ GraphTopoSort *GraphTopoSortComputeV1(Graph *g) {
     unsigned int *seq_next = topoSort->vertexSequence; // Pointer to the next position in the resulting sequence
 
     // While there are vertices to process
-    while (topoSort->numVertices-- > 0) {
+    while (seq_next < topoSort->vertexSequence + topoSort->numVertices) {
         // Get the vertex with no incoming edges and not yet marked or return invalid sorting if no such vertex exists
         unsigned int v = -1;
-        while (++v < GraphGetNumVertices(topoSort->graph) && !(*(topoSort->numIncomingEdges + v) == 0 && !*(topoSort->marked + v)));
-        if (v == GraphGetNumVertices(topoSort->graph)) return topoSort;
+        while (++v < topoSort->numVertices && !(*(topoSort->numIncomingEdges + v) == 0 && !*(topoSort->marked + v)));
+        if (v == topoSort->numVertices) return topoSort;
 
         // Add the vertex to the sequence and mark it
         *seq_next++ = v;
@@ -89,9 +89,9 @@ GraphTopoSort *GraphTopoSortComputeV1(Graph *g) {
 
         // Remove the edges from the vertex and update the in-degree of the adjacent vertices
         const unsigned int *adj = GraphGetAdjacentsTo(topoSort->graph, v);
-        while (*++adj) {
-            GraphRemoveEdge(topoSort->graph, v, *adj);
-            (*(topoSort->numIncomingEdges + *adj))--;
+        for (unsigned int o = 1; o <= 0[adj]; o++) {
+            GraphRemoveEdge(topoSort->graph, v, o[adj]);
+            o[adj][topoSort->numIncomingEdges]--;
         }
     }
 
