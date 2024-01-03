@@ -1,0 +1,55 @@
+%! Author = TiagoRG
+%! GitHub = https://github.com/TiagoRG
+
+\chapter{Introdução}
+\label{ch:introducao}
+% Conteúdo da introdução aqui
+
+Neste trabalho será desenvolvido um programa que trabalha com grafos.\ O programa conseguirá criar ficheiros, quer a partir de funções, quer a partir de um ficheiro de texto.\ Permitirá ainda realizar a ordenação topológica de um grafo recorrendo a um de três algoritmos implementados, sendo eles:
+
+\begin{itemize}
+    \item \ref{chap:graphtoposortv1} através da cópia do grafo e remoção de vértices sem arestas de entrada;
+    \item \ref{chap:graphtoposortv2} utilizando uma lista auxiliar com os vértices marcados;
+    \item \ref{chap:graphtoposortv3} recorrendo a uma fila de prioridade (first in, first out).
+\end{itemize}
+
+Para cada um destes algoritmos será efetuada a respetiva análise de complexidade.\ Será ainda feita uma análise comparativa entre os três algoritmos, para determinar qual o mais eficiente.
+
+\vspace*{5mm}
+\rule{.95\textwidth}{0.2pt}
+\vspace*{5mm}
+
+Os grafos são representados com a seguinte estrutura:
+
+\begin{itemize}
+    \item int isDigraph - indica se o grafo é direcionado ou não;
+    \item int isComplete - indica se o grafo é completo ou não;
+    \item int isWeighted - indica se o grafo tem pesos nas arestas ou não;
+    \item unsigned int numVertices - número de vértices do grafo;
+    \item unsigned int numEdges - número de arestas do grafo;
+    \item List *verticesList - lista de vértices do grafo;
+\end{itemize}
+
+\vspace*{5mm}
+
+Os vértices são representados com a seguinte estrutura:
+
+\begin{itemize}
+    \item unsigned int id - identificador do vértice;
+    \item unsigned int inDegree - grau de entrada do vértice;
+    \item unsigned int outDegree - grau de saída do vértice;
+    \item List *edgesList - lista de arestas do vértice;
+\end{itemize}
+
+\vspace*{5mm}
+
+As arestas são representadas com a seguinte estrutura:
+
+\begin{itemize}
+    \item unsigned int adjVertex - identificador do vértice de destino;
+    \item double weight - peso da aresta;
+\end{itemize}
+
+\vspace*{5mm}
+
+As listas estão implementadas como listas ordenadas, sendo que a ordenação é feita por ordem crescente do identificador do vértice de destino da aresta.\ A lista está implementada no ficheiro \textit{SortedList.c} e \textit{SortedList.h}.
