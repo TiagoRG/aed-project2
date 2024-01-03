@@ -448,6 +448,29 @@ int GraphAddWeightedEdge(Graph *g, unsigned int v, unsigned int w, double weight
     return _addEdge(g, v, w, weight);
 }
 
+int _removeEdge(Graph *g, struct _Vertex *origin, struct _Vertex *dest, int secondCall) {
+    // Move to the beggining of the origin's edges list
+    ListMoveToHead(origin->edgesList);
+    for (unsigned int i = 0; i < ListGetSize(origin->edgesList); i++) {
+        // Check if origin adjVertex is the destination
+        if (((struct _Edge *)ListGetCurrentItem(origin->edgesList))->adjVertex == dest->id) {
+            // Remove the edge and free it from the memory
+            free(ListRemoveCurrent(origin->edgesList));
+            // Decrease vertices degrees
+            origin->outDegree--;
+            if (!secondCall) dest->inDegree--;
+            // Decrease number of edges
+            if (!secondCall) g->numEdges--;
+            // Run addicional code if the graph is not a digraph or return success if it is
+            if (g->isDigraph || secondCall) return 1;
+            else return _removeEdge(g, dest, origin, 1);
+        }
+        ListMoveToNext(origin->edgesList);
+    }
+
+    return 0;
+}
+
 int GraphRemoveEdge(Graph *g, unsigned int v, unsigned int w) {
     assert(g != NULL);
 
@@ -458,50 +481,8 @@ int GraphRemoveEdge(Graph *g, unsigned int v, unsigned int w) {
     ListMove(g->verticesList, w);
     struct _Vertex *dest = ListGetCurrentItem(g->verticesList);
 
-    // Move to beggining of edgesList for the origin
-    ListMoveToHead(origin->edgesList);
-    for (unsigned int i = 0; i < ListGetSize(origin->edgesList); i++) {
-        // Check if origin adjVertex is the destination
-        if (((struct _Edge*)ListGetCurrentItem(origin->edgesList))->adjVertex == w) {
-            // Remove the edge
-            ListRemoveCurrent(origin->edgesList);
-            // Decrease vertices degrees
-            origin->outDegree--;
-            dest->inDegree--;
-            // Decrease number of edges
-            g->numEdges--;
-            // Run addicional code if the graph is not a digraph or return success if it is
-            if (g->isDigraph) return 1;
-            else goto notdigraph;
-        } else {
-            ListMoveToNext(origin->edgesList);
-        }
-    }
-
-    // Return unsuccess
-    return 0;
-
-// This code will only be ran if the graph is not a digraph
-notdigraph:
-    // Move to beggining of edgesList for the destination
-    ListMoveToHead(dest->edgesList);
-    for (unsigned int i = 0; i < ListGetSize(dest->edgesList); i++) {
-        // Check if destination adjVertex is the origin
-        if (((struct _Edge*)ListGetCurrentItem(dest->edgesList))->adjVertex == v) {
-            // Remove the edge
-            ListRemoveCurrent(dest->edgesList);
-            // Decrease vertices degrees
-            origin->inDegree--;
-            dest->outDegree--;
-            // Return success
-            return 1;
-        } else {
-            ListMoveToNext(dest->edgesList);
-        }
-    }
-
-    // Return unsuccess
-    return 0;
+    // Call and return _removeEdge
+    return _removeEdge(g, origin, dest, 0);
 }
 
 // CHECKING
