@@ -113,6 +113,7 @@ GraphTopoSort *GraphTopoSortComputeV2(Graph *g) {
     GraphTopoSort *topoSort = _create(g);
     unsigned int *seq_next = topoSort->vertexSequence; // Pointer to the next position in the resulting sequence
 
+    // While there are vertices to process
     while (seq_next < topoSort->vertexSequence + topoSort->numVertices) {
         // Get the vertex with no incoming edges and not yet marked or return invalid sorting if no such vertex exists
         unsigned int v = -1;

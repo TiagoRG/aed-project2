@@ -468,6 +468,8 @@ int GraphRemoveEdge(Graph *g, unsigned int v, unsigned int w) {
             // Decrease vertices degrees
             origin->outDegree--;
             dest->inDegree--;
+            // Decrease number of edges
+            g->numEdges--;
             // Run addicional code if the graph is not a digraph or return success if it is
             if (g->isDigraph) return 1;
             else goto notdigraph;
@@ -526,15 +528,41 @@ int ArrayContains(const unsigned int *array, unsigned int value) {
 
 int GraphCheckInvariants(const Graph *g) {
 	assert(g != NULL);
-	
-	for (unsigned int v = 0; v < g->numVertices; v++) {
-		ListMove(g->verticesList, v);
-		unsigned int *adjacents = GraphGetAdjacentsTo(g, v);
-		if (ArrayCheckDuplicates(adjacents) || ArrayContains(adjacents, v))
-			return 1; // if there are parallel edges or laces
+
+    // Check if the number of vertices is equal to the number of vertices in the list
+    if (ListGetSize(g->verticesList) != g->numVertices) return 0;
+
+    unsigned int graphTotalInDegree = 0;
+    unsigned int graphTotalOutDegree = 0;
+    for (unsigned int i = 0; i < g->numVertices; i++) {
+        ListMove(g->verticesList, i);
+        struct _Vertex *v = ListGetCurrentItem(g->verticesList);
+
+        // Check if the number of edges in a vertex isn't bigger than the number of vertices
+        if (ListGetSize(v->edgesList) > g->numVertices - 1) return 0;
+        // Check if the number of edges in a vertice isn't bigger than the number of edges
+        if (ListGetSize(v->edgesList) > g->numEdges) return 0;
+        // Check if inDegree = outDegree (non digraph only)
+        if (!GraphIsDigraph(g) && v->inDegree != v->outDegree) return 0;
+
+        const unsigned int *adj = GraphGetAdjacentsTo(g, i);
+        // Check if the number of adjacent vertices is equal to the outDegree
+        if (0[adj] != v->outDegree) return 0;
+        // Check for laces
+        if (ArrayContains(adj, i)) return 0;
+        // Check for duplicates
+        if (ArrayCheckDuplicates(adj)) return 0;
+
+        graphTotalInDegree += v->inDegree;
+        graphTotalOutDegree += v->outDegree;
     }
 
-    return 0;
+    // Check if the total inDegree is equal to the total outDegree
+    // Digraph: Check if inDegree + outDegree is equal to half of the number of edges
+    // Non digraph: Check if the total degree is equal half of the number of edges
+    return graphTotalInDegree == graphTotalOutDegree
+        && (!GraphIsDigraph(g) || graphTotalInDegree == g->numEdges)
+        && (GraphIsDigraph(g) || graphTotalInDegree == 2 * g->numEdges);
 }
 
 // DISPLAYING on the console
