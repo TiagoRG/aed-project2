@@ -1,0 +1,55 @@
+\chapter{Análise Experimental}
+\label{ch:analise-experimental}
+
+\section{Método de Experimentação}
+\label{sec:analise-experimental:metodo-de-experimentacao}
+
+Os resultados foram obtidos a partir da utilização do módulo de instrumentação fornecido pelos professores.\ Este módulo permite medir o tempo de execução de uma função, bem como o número de instruções executadas.
+
+Foi utilizado um computador com as seguintes especificações:
+
+\begin{itemize}
+    \item \textbf{CPU:} 11th Gen Intel i7-1165G7 (8) @ 4.700GHz;
+    \item \textbf{GPU:} Intel TigerLake-LP GT2 [Iris Xe Graphics];
+    \item \textbf{RAM:} 16GB;
+    \item \textbf{Kernel:} 6.6.9-zen1-1-zen (Arch Linux x86\_64);
+\end{itemize}
+
+\section{Resultados}
+\label{sec:analise-experimental:resultados}
+
+Para a experimentação foram usados 5 grafos diferentes as seguintes dimensões:
+
+\begin{itemize}
+    \item Grafo 1--7 vértices e 9 arestas;
+    \item Grafo 2--7 vértices e 12 arestas;
+    \item Grafo 3--7 vértices e 11 arestas;
+    \item Grafo 4--13 vértices e 15 arestas;
+    \item Grafo 5--15 vértices e 25 arestas;
+\end{itemize}
+
+\begin{table}[H]
+    \centering
+    \label{tab:resultados}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+
+        \hline
+        \multicolumn{2}{|c|}{\textbf{Grafo 1}} & \multicolumn{2}{|c|}{\textbf{Grafo 2}} & \multicolumn{2}{|c|}{\textbf{Grafo 3}} & \multicolumn{2}{|c|}{\textbf{Grafo 4}} & \multicolumn{2}{|c|}{\textbf{Grafo 5}} \\
+        \hline
+        \textbf{Versão} & \textbf{Caltime} & \textbf{Versão} & \textbf{Caltime} & \textbf{Versão} & \textbf{Caltime} & \textbf{Versão} & \textbf{Caltime} & \textbf{Versão} & \textbf{Caltime} \\
+        \hline
+        V1 & 0.010 ms & V1 & 0.006 ms & V1 & 0.007 ms & V1 & 0.011 ms & V1 & 0.014 ms\\
+        \hline
+        V2 & 0.001 ms & V2 & 0.002 ms & V2 & 0.002 ms & V2 & 0.002 ms & V2 & 0.003 ms\\
+        \hline
+        V3 & 0.001 ms & V3 & 0.002 ms & V3 & 0.001 ms & V3 & 0.002 ms & V3 & 0.002 ms\\
+        \hline
+
+    \end{tabular}
+    \caption{Resultados obtidos}
+\end{table}
+
+\section{Análise dos Resultados}
+\label{sec:analise-experimental:analise-dos-resultados}
+
+Como se pode verificar pela tabela \ref{tab:resultados}, a versão 1 é a mais lenta, isto era esperado visto que esta versão precisa de criar uma cópia do grafo para chegar ao resultado.\ Por mais que as versões 2 e 3 sejam bastante semelhantes, a versão 3 é ligeiramente mais otimizada, o que se nota especialmente se escalarmos o número de vértices e arestas.

@@ -1,0 +1,53 @@
+\chapter{Análise Formal}
+\label{ch:analise-formal}
+
+\section{Algoritmo 1}
+\label{sec:analise-formal:algoritmo-1}
+
+\subsection{Análise Temporal}
+\label{sec:analise-formal:algoritmo-1:analise-temporal}
+
+Esta função tem os seguintes elementos de complexidade temporal:
+
+\begin{enumerate}
+    \item \textbf{GraphCopy:} A chamada desta função tem de visitar todos os vértices e arestas do grafo, logo a sua complexidade é $O(V + E)$;
+    \item \textbf{Loop principal, procura de vértices e remoção de arestas:} Estes loops têm de percorrer todos os vértices do grafo, logo a sua complexidade é $O(V)$ (cada um), sendo que a remoção de arestas é $O(E)$ já que tem de percorrer todas as arestas do grafo.\ Isto resulta numa complexidade de $O(V^2 + E)$ para o loop principal para o pior caso e $O(V + E)$ para o melhor caso (quando não tem de percorrer os vértices todos na procura);
+    \item \textbf{GraphDestroy:} A chama desta função tem de visitar todos os vértices e arestas do grafo, logo a sua complexidade é $O(V + E)$;
+\end{enumerate}
+
+Assim, a complexidade total da função é $O(V^2 + E)$ para o pior caso e $O(V + E)$ para o melhor caso.
+
+\subsection{Análise Espacial}
+\label{sec:analise-formal:algoritmo-1:analise-espacial}
+
+Esta função tem os seguintes elementos de complexidade espacial:
+
+\begin{enumerate}
+    \item \textbf{\_create:} Esta função aloca memória para a estrutura da ordenação topológica, memória essa que escala consoante o número de vértices do grafo, logo a sua complexidade é $O(V)$;
+    \item \textbf{GraphCopy:} Esta função cria um grafo, cujo custo de memória depende do número de vértices e arestas do grafo original, logo a sua complexidade é $O(V + E)$;
+    \item \textbf{GraphGetAdjacentsTo:} Esta função aloca memória para a lista de vértices adjacentes, cujo custo de memória depende do número de vértices adjacentes, logo a sua complexidade é $O(V)$;
+\end{enumerate}
+
+Assim, a complexidade total da função é $O(V + E)$.
+
+\pagebreak
+
+\section{Algoritmo 2}
+\label{sec:analise-formal:algoritmo-2}
+
+\subsection{Análise Temporal}
+\label{sec:analise-formal:algoritmo-2:analise-temporal}
+
+\subsection{Análise Espacial}
+\label{sec:analise-formal:algoritmo-2:analise-espacial}
+
+\pagebreak
+
+\section{Algoritmo 3}
+\label{sec:analise-formal:algoritmo-3}
+
+\subsection{Análise Temporal}
+\label{sec:analise-formal:algoritmo-3:analise-temporal}
+
+\subsection{Análise Espacial}
+\label{sec:analise-formal:algoritmo-3:analise-espacial}
