@@ -185,9 +185,11 @@ Graph *GraphCopy(const Graph *g) {
             const struct _Edge *e = ListGetCurrentItem(v->edgesList);
 
             // Check if the edge has already been copied
-            if (e->adjVertex[marked]) continue;
-            // Mark the edge as copied
-            v_copy->id[marked] = 1;
+            if (!g->isDigraph) {
+                if (e->adjVertex[marked]) continue;
+                // Mark the edge as copied
+                v_copy->id[marked] = 1;
+            }
 
             // Add edge
             if (copy->isWeighted) GraphAddWeightedEdge(copy, v_copy->id, e->adjVertex, e->weight);
