@@ -7,6 +7,7 @@
 //
 
 #include "Graph.h"
+#include <assert.h>
 
 int main(void) {
     // What kind of graph is g01?
@@ -19,11 +20,13 @@ int main(void) {
     Graph *g01_copy = GraphCopy(g01);
     printf("Copy of the first graph:\n");
     GraphDisplay(g01_copy);
+    GraphDestroy(&g01_copy);
     for (int i = 0; i < 6; i++) {
         GraphListAdjacents(g01, i);
     }
     printf("Remove edge (1,2)\n");
     GraphRemoveEdge(g01, 1, 2);
+    assert(GraphCheckInvariants(g01));
     GraphDisplay(g01);
     for (int i = 0; i < 6; i++) {
         GraphListAdjacents(g01, i);
@@ -38,8 +41,10 @@ int main(void) {
     Graph *dig01_copy = GraphCopy(dig01);
     printf("Copy of the second graph:\n");
     GraphDisplay(dig01_copy);
+    GraphDestroy(&dig01_copy);
     printf("Remove edge (1,2)\n");
     GraphRemoveEdge(dig01, 1, 2);
+    assert(GraphCheckInvariants(dig01));
     GraphDisplay(dig01);
 
     Graph *g03 = GraphCreate(6, 0, 1);
@@ -49,10 +54,12 @@ int main(void) {
     printf("The third graph:\n");
     GraphDisplay(g03);
     Graph *g03_copy = GraphCopy(g03);
-    printf("Copy of the second graph:\n");
+    printf("Copy of the third graph:\n");
     GraphDisplay(g03_copy);
+    GraphDestroy(&g03_copy);
     printf("Remove edge (1,2)\n");
     GraphRemoveEdge(g03, 1, 2);
+    assert(GraphCheckInvariants(g03));
     GraphDisplay(g03);
 
     GraphDestroy(&g01);

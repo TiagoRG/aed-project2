@@ -1,9 +1,15 @@
 # Graphs directory
 GRAPHS/
+GRAFOS_ORIENTADOS/
 example1
 example2
 example3
 graph_from_file_test
+
+# Core dump files
+core.*
+*.core
+vgcore.*
 
 # Prerequisites
 *.d

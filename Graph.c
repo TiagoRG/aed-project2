@@ -162,6 +162,8 @@ Graph *GraphCopy(const Graph *g) {
 
     // Create an empty graph
     Graph *copy = GraphCreate(g->numVertices, g->isDigraph, g->isWeighted);
+    // Mark vertices that have already been copied
+    unsigned int *marked = (unsigned int *)calloc(g->numVertices, sizeof(unsigned int));
 
     // Copy vertices
     // Move to the beggining of the list
@@ -174,9 +176,6 @@ Graph *GraphCopy(const Graph *g) {
         ListMove(copy->verticesList, v->id);
         struct _Vertex *v_copy = ListGetCurrentItem(copy->verticesList);
 
-        // Copy the vertex id
-        v_copy->id = v->id;
-
         // Copy edges
         // Move to the beggining of the list
         ListMoveToHead(v->edgesList);
@@ -185,12 +184,18 @@ Graph *GraphCopy(const Graph *g) {
             // Get pointer to current edge
             const struct _Edge *e = ListGetCurrentItem(v->edgesList);
 
+            // Check if the edge has already been copied
+            if (e->adjVertex[marked]) continue;
+            // Mark the edge as copied
+            v_copy->id[marked] = 1;
+
             // Add edge
             if (copy->isWeighted) GraphAddWeightedEdge(copy, v_copy->id, e->adjVertex, e->weight);
             else GraphAddEdge(copy, v_copy->id, e->adjVertex);
         }
     }
 
+    free(marked);
     return copy;
 }
 
@@ -208,7 +213,7 @@ Graph *GraphFromFile(FILE *f) {
     Graph *g = GraphCreate(numVertices, isDigraph, isWeighted);
 
     // Variable for edge vertices (source and destination)
-    int v, w;
+    unsigned int v, w;
     // Read edges until the end of the file and store into variables
     while (fscanf(f, "%d %d", &v, &w) != EOF) {
         // Ignore laces
@@ -398,6 +403,7 @@ static int _addEdge(Graph *g, unsigned int v, unsigned int w, double weight) {
     int result = ListInsert(vertex->edgesList, edge);
 
     if (result == -1) {
+        free(edge);
         return 0;
     } else {
         g->numEdges++;
@@ -419,6 +425,7 @@ static int _addEdge(Graph *g, unsigned int v, unsigned int w, double weight) {
         result = ListInsert(vertex->edgesList, edge);
 
         if (result == -1) {
+            free(edge);
             return 0;
         } else {
             // g->numEdges++; // Do not count the same edge twice on a
@@ -523,27 +530,29 @@ int GraphCheckInvariants(const Graph *g) {
         if (ListGetSize(v->edgesList) > g->numVertices - 1) return 0;
         // Check if the number of edges in a vertice isn't bigger than the number of edges
         if (ListGetSize(v->edgesList) > g->numEdges) return 0;
-        // Check if inDegree = outDegree (non digraph only)
-        if (!GraphIsDigraph(g) && v->inDegree != v->outDegree) return 0;
 
         const unsigned int *adj = GraphGetAdjacentsTo(g, i);
         // Check if the number of adjacent vertices is equal to the outDegree
-        if (0[adj] != v->outDegree) return 0;
+        if (*adj != v->outDegree) return 0;
         // Check for laces
         if (ArrayContains(adj, i)) return 0;
         // Check for duplicates
         if (ArrayCheckDuplicates(adj)) return 0;
 
+        // Free the array of adjacent vertices
+        free((void *)adj);
+
         graphTotalInDegree += v->inDegree;
         graphTotalOutDegree += v->outDegree;
     }
 
-    // Check if the total inDegree is equal to the total outDegree
-    // Digraph: Check if inDegree + outDegree is equal to half of the number of edges
-    // Non digraph: Check if the total degree is equal half of the number of edges
-    return graphTotalInDegree == graphTotalOutDegree
-        && (!GraphIsDigraph(g) || graphTotalInDegree == g->numEdges)
-        && (GraphIsDigraph(g) || graphTotalInDegree == 2 * g->numEdges);
+    if (!GraphIsDigraph(g)) { // Graph is not a digraph
+        // Check if the total outDegree is equal to the twice the number of edges
+        return graphTotalOutDegree == 2 * g->numEdges;
+    } else { // Graph is a digraph
+        // Check if the total inDegree is equal to the total outDegree and if it is equal to the number of edges
+        return graphTotalInDegree == graphTotalOutDegree && graphTotalOutDegree == g->numEdges;
+    }
 }
 
 // DISPLAYING on the console

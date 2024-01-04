@@ -72,8 +72,9 @@ static GraphTopoSort *_create(Graph *g) {
 GraphTopoSort *GraphTopoSortComputeV1(Graph *g) {
     assert(g != NULL && GraphIsDigraph(g) == 1);
 
-    // Create and initialize the struct
-    GraphTopoSort *topoSort = _create(GraphCopy(g));
+    // Create and initialize the struct and the copy of the graph
+    GraphTopoSort *topoSort = _create(g);
+    Graph *graph = GraphCopy(g);
     unsigned int *seq_next = topoSort->vertexSequence; // Pointer to the next position in the resulting sequence
 
     // While there are vertices to process
@@ -81,22 +82,27 @@ GraphTopoSort *GraphTopoSortComputeV1(Graph *g) {
         // Get the vertex with no incoming edges and not yet marked or return invalid sorting if no such vertex exists
         unsigned int v = -1;
         while (++v < topoSort->numVertices && !(*(topoSort->numIncomingEdges + v) == 0 && !*(topoSort->marked + v)));
-        if (v == topoSort->numVertices) return topoSort;
+        if (v == topoSort->numVertices) goto return_result;
 
         // Add the vertex to the sequence and mark it
         *seq_next++ = v;
         *(topoSort->marked + v) = 1;
 
         // Remove the edges from the vertex and update the in-degree of the adjacent vertices
-        const unsigned int *adj = GraphGetAdjacentsTo(topoSort->graph, v);
+        const unsigned int *adj = GraphGetAdjacentsTo(graph, v);
         for (unsigned int o = 1; o <= 0[adj]; o++) {
-            GraphRemoveEdge(topoSort->graph, v, o[adj]);
+            GraphRemoveEdge(graph, v, o[adj]);
             o[adj][topoSort->numIncomingEdges]--;
         }
+        free((void *)adj);
     }
 
     // If the algorithm reaches this point, a valid topological sorting was computed
     topoSort->validResult = 1;
+
+return_result:
+    // Destroy the copy of the graph and return the result
+    GraphDestroy(&graph);
     return topoSort;
 }
 
@@ -127,8 +133,10 @@ GraphTopoSort *GraphTopoSortComputeV2(Graph *g) {
         // Remove the edges from the vertex and update the in-degree of the adjacent vertices
         const unsigned int *adj = GraphGetAdjacentsTo(topoSort->graph, v);
         for (unsigned int o = 1; o <= 0[adj]; o++) o[adj][topoSort->numIncomingEdges]--;
+        free((void *)adj);
     }
 
+    // If the algorithm reaches this point, a valid topological sorting was computed and return the result
     topoSort->validResult = 1;
     return topoSort;
 }
@@ -160,9 +168,11 @@ GraphTopoSort *GraphTopoSortComputeV3(Graph *g) {
 
         // Update the in-degree of the adjacent vertices and enqueue the ones with no incoming edges
         const unsigned int *adj = GraphGetAdjacentsTo(topoSort->graph, v);
-        for (unsigned int o = 1; o <= 0[adj]; o++) if (--(*(topoSort->numIncomingEdges + o[adj])) == 0)
-            QueueEnqueue(queue, o[adj]);
+        for (unsigned int o = 1; o <= 0[adj]; o++) if (!--(*(topoSort->numIncomingEdges + o[adj]))) QueueEnqueue(queue, o[adj]);
+        free((void *)adj);
     }
+
+    QueueDestroy(&queue);
 
     // A valid sorting was computed if all vertices were processed
     topoSort->validResult = topoSort->numVertices == 0;
