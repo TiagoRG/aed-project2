@@ -10,6 +10,7 @@
 Esta função tem os seguintes elementos de complexidade temporal:
 
 \begin{enumerate}
+    \item \textbf{\_create:} Esta função inicializa um array de tamanho $V$, logo a sua complexidade é $O(V)$;
     \item \textbf{GraphCopy:} A chamada desta função tem de visitar todos os vértices e arestas do grafo, logo a sua complexidade é $O(V + E)$;
     \item \textbf{Loop principal, procura de vértices e remoção de arestas:} Estes loops têm de percorrer todos os vértices do grafo, logo a sua complexidade é $O(V)$ (cada um), sendo que a remoção de arestas é $O(E)$ já que tem de percorrer todas as arestas do grafo.\ Isto resulta numa complexidade de $O(V^2 + E)$ para o loop principal para o pior caso e $O(V + E)$ para o melhor caso (quando não tem de percorrer os vértices todos na procura);
     \item \textbf{GraphDestroy:} A chama desta função tem de visitar todos os vértices e arestas do grafo, logo a sua complexidade é $O(V + E)$;
@@ -41,7 +42,7 @@ Assim, a complexidade total da função é $O(V + E)$.
 Esta função tem os seguintes elementos de complexidade temporal:
 
 \begin{itemize}
-    \item \textbf{\_create:} Esta função aloca memória cujo custo depende do número de vértices do grafo, logo a sua complexidade é $O(V)$;
+    \item \textbf{\_create:} Esta função inicializa um array de tamanho $V$, logo a sua complexidade é $O(V)$;
     \item \textbf{Main loop:} Este loop percorre pelo menos uma vez todos os vértices do grafo, logo a sua complexidade é $O(V)$.\ Dentro dele, é feita uma Depth-First Search a partir do primeiro vértice não marcado, logo a sua complexidade é $O(V + E)$.
 \end{itemize}
 
@@ -65,5 +66,25 @@ Assim, a complexidade total da função é $O(V)$.
 \subsection{Análise Temporal}
 \label{sec:analise-formal:algoritmo-3:analise-temporal}
 
+Esta função tem os seguintes elementos de complexidade temporal:
+
+\begin{itemize}
+    \item \textbf{\_create:} Esta função inicializa um array de tamanho $V$, logo a sua complexidade é $O(V)$;
+    \item \textbf{Queue initialization:} Esta função cria uma fila e adiciona todos os vértices sem arestas de entrada, logo a sua complexidade é $O(V)$ pois tem de percorrer todos os vértices do grafo;
+    \item \textbf{Main loop:} Este loop corre enquanto a fila não estiver vazia cuja complexidade é $O(V)$.\ Dentro dele, é feita a atualização das arestas de entrada dos vértices adjacentes ao vértice que está a ser processado, logo a cuja complexidade é $O(E)$.\ Por fim, é feita a remoção do vértice da fila, cuja complexidade é $O(1)$.\ Isto resulta numa complexidade de $O(V + E)$ para o loop principal;
+\end{itemize}
+
+Assim, a complexidade total da função é $O(V + E)$.
+
 \subsection{Análise Espacial}
 \label{sec:analise-formal:algoritmo-3:analise-espacial}
+
+Esta função tem os seguintes elementos de complexidade espacial:
+
+\begin{itemize}
+    \item \textbf{\_create:} Esta função aloca memória cujo custo depende do número de vértices do grafo, logo a sua complexidade é $O(V)$;
+    \item \textbf{QueueCreate:} Esta função aloca memória para a fila, cujo custo de memória depende do número de vértices do grafo sendo que no pior caso a sua complexidade é $O(V)$;
+    \item \textbf{GraphGetAdjacentsTo:} Esta função aloca memória para a lista de vértices adjacentes, cujo custo de memória depende do número de vértices adjacentes, logo a sua complexidade é $O(V)$;
+\end{itemize}
+
+Assim, a complexidade total da função é $O(V)$.
