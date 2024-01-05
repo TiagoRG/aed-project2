@@ -38,10 +38,26 @@ Assim, a complexidade total da função é $O(V + E)$.
 \subsection{Análise Temporal}
 \label{sec:analise-formal:algoritmo-2:analise-temporal}
 
+Esta função tem os seguintes elementos de complexidade temporal:
+
+\begin{itemize}
+    \item \textbf{\_create:} Esta função aloca memória cujo custo depende do número de vértices do grafo, logo a sua complexidade é $O(V)$;
+    \item \textbf{Main loop:} Este loop percorre pelo menos uma vez todos os vértices do grafo, logo a sua complexidade é $O(V)$.\ Dentro dele, é feita uma Depth-First Search a partir do primeiro vértice não marcado, logo a sua complexidade é $O(V + E)$.
+\end{itemize}
+
+Assim, a complexidade total da função é $O(V + E)$.
+
 \subsection{Análise Espacial}
 \label{sec:analise-formal:algoritmo-2:analise-espacial}
 
-\pagebreak
+Esta função tem os seguintes elementos de complexidade espacial:
+
+\begin{itemize}
+    \item \textbf{\_create:} Esta função aloca memória cujo custo depende do número de vértices do grafo, logo a sua complexidade é $O(V)$;
+    \item \textbf{GraphGetAdjacentsTo:} Esta função aloca memória para a lista de vértices adjacentes, cujo custo de memória depende do número de vértices adjacentes, logo a sua complexidade é $O(V)$;
+\end{itemize}
+
+Assim, a complexidade total da função é $O(V)$.
 
 \section{Algoritmo 3}
 \label{sec:analise-formal:algoritmo-3}
